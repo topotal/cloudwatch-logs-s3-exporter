@@ -5,15 +5,15 @@ Lambda Function exports CloudWatch Logs to S3 without duplicates or omissions.
 ## Inputs
 
 - `DestinationS3Bucket`
-  - The destination S3 Bucket for the export
+  - The destination S3 Bucket for the export (e.g. `my-cwlogs-archive`)
 - `SourceLogGroupPrefixes`
-  - The LogGroup Prefixes to be exported (Comma Separated Values)
+  - The LogGroup Prefixes to be exported (Comma Separated Values) (e.g. `/aws/eks/cluster/dev,/aws/eks/cluster/prd`)
 - `StateStoreType`
   - The type of store (e.g. `s3`)
 - `StoreDSN`
   - The DSN of store (e.g. `s3://my-bucket/state.json`)
 - `LogLevel` (Optional)
-  - `DEBUG`, `INFO`, `WARN`, `ERROR`
+  - One of `DEBUG`, `INFO`, `WARN`, `ERROR` (default: `INFO`)
 
 ## How It Works
 
@@ -36,8 +36,6 @@ This behaves as follows:
         - Skips exporting
       - If LogStream's `LastIngestionTime` > `ExportedAt`
         - Sets `from` to `ExportedAt`, `to` to `LastIngestionTime` and executes the export
-  - Maintains only those LogStreams in `state.json` that meet the following criteria:
-    - `ExportedAt` < LogGroup's `RetentionInDays`
 
 ## Concurrency
 
